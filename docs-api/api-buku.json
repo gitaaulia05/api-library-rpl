@@ -1,0 +1,403 @@
+{
+    "openapi":"3.0.3",
+    "info": {
+      "title":"DOKUMENTASI API PERPUSTAKAAN-BUKU",
+      "version":"1.0"
+    },
+    "servers": [
+      {"url":"http://perpustakaan.test/"}
+    ],
+    "paths": {
+        "/api/buku" : {
+            "post" : {
+                "description" : "Simpan Data Buku", 
+                "requestBody": {
+                    "content" : {
+                        "application/json" : {
+                            "example" : {
+                                "30 Cerita Teladan Islami": {
+                                    "description" : "Simpan Data Buku Baru" ,
+                                    "value" : {
+                                        "id_buku" : "23552011050",
+                                        "nama_buku" : "30 Cerita Teladan Islami",
+                                        "nama_penulis" : " Mahmudah Mastur" ,
+                                         "nama_penerbit" : "Noktah", 
+                                         "jumlah_buku" : "88" ,
+                                        "tanggal_masuk_buku" : "2024-12-04" ,
+                                         "buku_tersedia" : "true" 
+
+
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "type" : "object",
+                                
+                                "properties" : {
+                                    "id_buku" : {
+                                       "type" : "string" 
+                                    },
+                                    "nama_buku" : {
+                                        "type" : "string"
+                                    }, 
+                                    "nama_penulis" : {
+                                         "type" : "string"
+                                    },
+                                    "nama_penerbit" : {
+                                         "type" : "string"
+                                    },
+                                    "jumlah_buku": {
+                                         "type" : "integer"
+                                    },
+                                    "tanggal_masuk_buku":{ "type" : "string"}, 
+                                    "buku_tersedia":{
+                                         "type" : "boolean"
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses" : {
+                    "400" : {
+                        "description" : "Gagal menambah data buku baru",
+                        "content" : {
+                            "application/json" :{
+                                "example" : {
+                                    "validationerror": {
+                                        "description" : "Validation Error" , 
+                                        "value" : {
+                                            "errors" : {
+                                              "nama_buku" : [
+                                                "Nama Buku tidak boleh Kosong!"
+                                              ],
+                                              "nama_penulis" : [
+                                                "Nama penulis tidak boleh Kosong!"
+                                              ],
+                                              "nama_penerbit" : [
+                                                "Nama penerbit tidak boleh Kosong!"
+                                              ],
+                                              "jumlah_buku" : [
+                                                "jumlah Buku tidak boleh Kosong!"
+                                              ],
+                                              "buku_tersedia" : [
+                                                "Buku Tersedia tidak boleh Kosong!"
+                                              ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "201" : {
+                        "description": "berhasil menambahkan data buku baru",
+                        "content": {
+                            "application/json" : {
+                                "schema" : {
+                                    "type" : "object" , 
+                                    "properties" : {
+                                        "data" : {
+                                            "type": "object",
+                                            "properties":{
+                                                
+                                        "id_buku" : {
+                                            "type" : "string" 
+                                         },
+                                         "nama_buku" : {
+                                             "type" : "string"
+                                         }, 
+                                         "nama_penulis" : {
+                                              "type" : "string"
+                                         },
+                                         "nama_penerbit" : {
+                                              "type" : "string"
+                                         },
+                                         "jumlah_buku": {
+                                              "type" : "integer"
+                                         },
+                                         "tanggal_masuk_buku":
+                                         { 
+                                            "type" : "string"
+                                        }, 
+                                         "buku_tersedia":{
+                                              "type" : "boolean"
+                                         }
+                                            }
+                            }
+                           
+                                    },
+                                    "errors": {
+                                        "type" : "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }, 
+            "get" : {
+                "description" : "Cari Data Buku" , 
+                "parameters":[
+                                    {
+                                        "name": "Authorization",
+                                        "in": "header"
+                                    }
+                                    
+                                ]  ,
+                "responses" :{
+                    "200" : {
+                        "description": "Berhasil Mengambil Data Buku",
+                        "content": {
+                            "application/json" : {
+                                "schema" : {
+                                    "type" : "object" , 
+                                    "properties" : {
+                                        "data" : {
+                                            "type": "array",
+                                          "items" : {
+                                            "type" : "object",
+                                            "properties":{
+                                                
+                                                "id_buku" : {
+                                                    "type" : "string" 
+                                                 },
+                                                 "nama_buku" : {
+                                                     "type" : "string"
+                                                 }, 
+                                                 "nama_penulis" : {
+                                                      "type" : "string"
+                                                 },
+                                                 "nama_penerbit" : {
+                                                      "type" : "string"
+                                                 },
+                                                 "jumlah_buku": {
+                                                      "type" : "integer"
+                                                 },
+                                                 "tanggal_masuk_buku":
+                                                 { 
+                                                    "type" : "string"
+                                                }, 
+                                                 "buku_tersedia":{
+                                                      "type" : "boolean"
+                                                 }
+                                                }
+                                          }
+                            }
+                           
+                                    },
+                                    "errors": {
+                                        "type" : "object"
+                                    },
+                                    "meta" : {
+                                        "type" : "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }     
+             
+            }
+        }, 
+        "/api/buku/{slug-nama-buku}" : {
+            "get" : {
+                "description" : "Detail Data Buku",
+                "parameters": [
+                    {
+                    "name": "Authorization",
+                    "in": "header"
+                },
+                {
+                    "name" : "slug-nama-buku" , 
+                    "in" : "header"
+                }
+            ],
+                "responses" : {
+                    "200" : {
+                        "description": "Berhasil Mengambil Data Buku",
+                        "content": {
+                            "application/json" : {
+                                "schema" : {
+                                    "type" : "object" , 
+                                    "properties" : {
+                                        "data" : {
+                                            "type": "object",
+                                            "properties":{
+                                                
+                                        "id_buku" : {
+                                            "type" : "string" 
+                                         },
+                                         "nama_buku" : {
+                                             "type" : "string"
+                                         }, 
+                                         "nama_penulis" : {
+                                              "type" : "string"
+                                         },
+                                         "nama_penerbit" : {
+                                              "type" : "string"
+                                         },
+                                         "jumlah_buku": {
+                                              "type" : "integer"
+                                         },
+                                         "tanggal_masuk_buku":
+                                         { 
+                                            "type" : "string"
+                                        }, 
+                                         "buku_tersedia":{
+                                              "type" : "boolean"
+                                         }
+                                            }
+                            }
+                           
+                                    },
+                                    "errors": {
+                                        "type" : "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }, 
+            "put" : {
+                "description" : "Update Data Buku", 
+                "parameters": [
+                    {
+                    "name": "Authorization",
+                    "in": "header"
+                },
+                {
+                    "name" : "slug-nama-buku" , 
+                    "in" : "header"
+                }
+              
+            ],
+            "requestBody": {
+                "content" : {
+                    "application/json" : {
+                        "example" : {
+                            "30 Cerita Teladan Islami": {
+                                "description" : "Update Data Buku" ,
+                                "value" : {
+                                    "nama_buku" : "100 Cerita Teladan Islami",
+                                    "nama_penulis" : " Mahmudah Mastur" , "nama_penerbit" : "Noktah", "jumlah_buku" : "88" ,
+                                    "tanggal_masuk_buk" : "2024-12-04" , "buku_tersedia" : "true" 
+
+
+                                }
+                            }
+                        },
+                        "schema": {
+                            "type" : "object",
+                            
+                            "properties" : {
+                                "id_buku" : {
+                                   "type" : "string" 
+                                },
+                                "nama_buku" : {
+                                    "type" : "string"
+                                }, 
+                                "nama_penulis" : {
+                                     "type" : "string"
+                                },
+                                "nama_penerbit" : {
+                                     "type" : "string"
+                                },
+                                "jumlah_buku": {
+                                     "type" : "integer"
+                                },
+                                "tanggal_masuk_buku":{ "type" : "string"}, 
+                                "buku_tersedia":{
+                                     "type" : "boolean"
+                                }
+
+                            }
+                        }
+                    }
+                }
+            },
+            "responses" : {
+                    "200" : {
+                        "description": "Berhasil Update Data Buku",
+                        "content": {
+                            "application/json" : {
+                                "schema" : {
+                                    "type" : "object" , 
+                                    "properties" : {
+                                        "data" : {
+                                            "type": "object",
+                                            "properties":{
+                                                
+                                        "id_buku" : {
+                                            "type" : "string" 
+                                         },
+                                         "nama_buku" : {
+                                             "type" : "string"
+                                         }, 
+                                         "nama_penulis" : {
+                                              "type" : "string"
+                                         },
+                                         "nama_penerbit" : {
+                                              "type" : "string"
+                                         },
+                                         "jumlah_buku": {
+                                              "type" : "integer"
+                                         },
+                                         "tanggal_masuk_buku":
+                                         { 
+                                            "type" : "string"
+                                        }, 
+                                         "buku_tersedia":{
+                                              "type" : "boolean"
+                                         }
+                                            }
+                            }
+                           
+                                    },
+                                    "errors": {
+                                        "type" : "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            },
+            "delete" : {
+                "description" : "Hapus Data Buku",
+                "parameters": [
+                    {
+                    "name": "Authorization",
+                    "in": "header"
+                },
+                {
+                    "name" : "slug-nama-buku" , 
+                    "in" : "header"
+                }
+            ],
+            "responses" : {
+                "200" : {
+                    "description": "Berhasil Hapus Data Buku",
+                    "content": {
+                        "application/json" : {
+                            "schema" : {
+                                "type" : "boolean"  
+
+                                },
+                                "errors": {
+                                    "type" : "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            }
+       
+        }
+        
+    }
+  
