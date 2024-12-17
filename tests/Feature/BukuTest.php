@@ -51,30 +51,42 @@ class BukuTest extends TestCase
             ]
         ]);
      }
+
+
+     public function testLogout(){
+        $this->seed([PetugasSeeder::class]);
+        $this->delete(uri: '/api/petugas/logout', headers: [
+            "Authorization" =>"test"
+        ])->assertStatus(200)->assertJson([
+            "data" => true
+        ]);
+     }
     
     public function testCreateSuccess()
     {
-        //  $this->seed([UserSeeder::class]);
-        $file = UploadedFile::fake()->image('buku.jpg');
+         $this->seed([PetugasSeeder::class]);
+ 
         $this->post('/api/buku' , [
           "id_buku" => "235520110700",
             "nama_buku_slug" => "30-Cerita-Teladan-Islami",
             "nama_buku" => "30 Cerita Teladan Islami",
-            "gambar_buku" => $file,
+            "gambar_buku" => new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true),
             "nama_penulis" => "Mahmudah Mastur",
             "nama_penerbit" => "Noktah",
             "jumlah_buku" => "88",
             "buku_tersedia" => "1",
             "tanggal_masuk_buku" => "2024-12-04",
             "update_terakhir" => "2024-12-04",
-        ] )
+        ], [
+                'Authorization' =>"test"
+        ])
         ->assertStatus(201)
         ->assertJson([
             'data' => [
                 "id_buku" => "235520110700",
                 "nama_buku_slug" => "30-Cerita-Teladan-Islami",
             "nama_buku" => "30 Cerita Teladan Islami",
-                "gambar_buku" => $file,
+                "gambar_buku" => new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true),
             "nama_penulis" => "Mahmudah Mastur",
             "nama_penerbit" => "Noktah",
             "jumlah_buku" => "88",
@@ -89,7 +101,7 @@ class BukuTest extends TestCase
     public function testGetSlugBuku(){
         $buku  = buku::query()->limit(1)->first();
         $this->get('/api/buku/'.$buku->nama_buku_slug, [
-            
+         
         ])->assertStatus(200)->assertJson([
             'data' => [
                 "id_buku" => "2355201100",

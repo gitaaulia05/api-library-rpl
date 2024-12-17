@@ -19,24 +19,28 @@ class ApiPerpusMiddleware
     public function handle(Request $request, Closure $next): Response
     {
 
-        $token = $request->header('Authorization');
+        $header = $request->header('Authorization');
      
+        $token= str_replace('Bearer ', '', $request->header('Authorization'));
+
         $authenticate = true;
 
         if(!$token){
             $authenticate = false;
-
-            Log::warning('Authorization token missing');
+            Log::error('No token provided in Authorization header.');
         }
-   
+
+     
         $petugas = petugas::where('token' , $token)->first();
-        Log::info('Petugas found:', ['petugas' => $petugas]); 
+       
 
         if(!$petugas){
             $authenticate = false;
             Log::warning('Petugas not found for token:', ['token' => $token]);
         } else {
             Auth::login($petugas);
+
+            
         }
              
                 

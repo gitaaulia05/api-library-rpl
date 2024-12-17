@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Petugas;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\PetugasResource;
+use Illuminate\Support\Facades\Request;
 use App\Http\Requests\PetugasLoginRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
@@ -29,7 +32,27 @@ class PetugasPerpustakaan extends Controller
 
         $petugas->token = Str::uuid()->toString();
         $petugas->save();
+     
 
         return new PetugasResource($petugas);
     }
+
+    public function getCurrentPetugas(Request $request) : PetugasResource {
+        $petugas = Auth::user();
+        \Log::info('Petugas Saat ini: ' , ['petugas' =>$petugas]);
+        return new PetugasResource($petugas);
+    }
+
+    public function logout(Request $request) : JsonResponse {
+
+        $petugas = Auth::user();
+        $petugas->token = null;
+
+        $petugas->save();
+
+        return response()->json([
+            "data" => true
+        ])->setStatusCode(200);
+    }
+    
 }

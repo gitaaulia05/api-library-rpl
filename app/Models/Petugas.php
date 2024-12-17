@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Petugas extends Model
+class Petugas extends Model implements Authenticatable
 {
     use HasFactory;
 
@@ -20,5 +21,33 @@ class Petugas extends Model
         'token',
         
     ];
+
+    public function getAuthIdentifierName(){
+            return 'username';
+    }
+
+    public function getAuthIdentifier(){
+            return $this->username;
+    }
+
+    public function getAuthPassword(){
+            return $this->password;
+    }
+
+    public function getAuthPasswordName(){
+        return 'password';
+    }
+
+    public function getRememberToken(){
+        return null;
+    }
+
+    public function setRememberToken($value){
+    
+    }
+
+    public function getRememberTokenName(){
+        return null;
+    }
 
 }

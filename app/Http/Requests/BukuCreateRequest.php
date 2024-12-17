@@ -14,7 +14,8 @@ class BukuCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() != null;
+        // return true;
     }
 
     /**

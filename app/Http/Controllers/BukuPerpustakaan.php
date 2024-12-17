@@ -21,8 +21,6 @@ class BukuPerpustakaan extends Controller
 
         if($request->hasFile('gambar_buku')){
 
-            // $image = $request->file('image');
-            // $image->storeAs('public/posts', $image->hashName());
 
             $data['gambar_buku'] = $request->file('gambar_buku')->store('gambarBuku' , 'public');
         }

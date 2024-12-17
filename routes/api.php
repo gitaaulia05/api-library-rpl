@@ -13,7 +13,9 @@ Route::post("/petugas/login" , [PetugasPerpustakaan::class, 'login']);
 
     Route::middleware(ApiPerpusMiddleware::class)->group(function(){
         
-        Route::get("/petugas/saatIni" , [PetugasController::class, 'getCurrentPetugas']);
+        Route::get("/petugas/saatIni" , [PetugasPerpustakaan::class, 'getCurrentPetugas']);
+
+        Route::delete("/petugas/logout", [PetugasPerpustakaan::class, 'logout']);
 
         Route::post("/buku" , [BukuPerpustakaan::class, 'create']);
         Route::get("/buku" , [BukuPerpustakaan::class, 'search_data']);

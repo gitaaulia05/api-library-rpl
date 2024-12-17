@@ -19,6 +19,7 @@ class PetugasSeeder extends Seeder
                 'id_petugas' => (String) Str::uuid(),
                 'username' => 'yayaa100',
                 'password' => Hash::make('test'),
+                'token' => 'test',
         ]);
     }
 }
