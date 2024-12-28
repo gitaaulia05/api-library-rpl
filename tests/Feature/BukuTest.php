@@ -54,9 +54,9 @@ class BukuTest extends TestCase
 
 
      public function testLogout(){
-        $this->seed([PetugasSeeder::class]);
+        // $this->seed([PetugasSeeder::class]);
         $this->delete(uri: '/api/petugas/logout', headers: [
-            "Authorization" =>"test"
+            "Authorization" =>"21addaee-8085-4db1-81b8-cafb14286060"
         ])->assertStatus(200)->assertJson([
             "data" => true
         ]);
