@@ -5,7 +5,7 @@
         "api/index.php": { "runtime": "vercel-php@0.7.3" }
     },
     "routes": [
-        { "src": "/build/(.*)", "dest": "/public/build/" },
+        { "src": "/build/(.*)", "dest": "/public/build/$1" },
         { "src": "/(.*)", "dest": "/api/index.php" }
     ],
     "public": true,
@@ -30,9 +30,5 @@
         "DB_PORT":"3306",
         "DB_DATABASE":"perpustakaanrpl_towerglobe",
         "DB_USERNAME":"perpustakaanrpl_towerglobe"
-
     }
-
-
-
 }
