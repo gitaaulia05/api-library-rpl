@@ -26,16 +26,17 @@ class BukuCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'id_buku' => ['required' ],
-            // 'nama_buku_slug' => ['required' , 'max:100'],
+          
             'nama_buku' => ['required' , 'max:100'],
             'gambar_buku' => ['required' , 'image' , 'mimes:jpeg,png,jpg|max:2048'],
+            // 'gambar_qr' => ['required' , 'image' , 'mimes:jpeg,png,jpg|max:2048'],
             'nama_penulis' => ['required' , 'max:100'],
             'nama_penerbit' => ['required' , 'max:100'],
             'jumlah_buku' => ['required' , 'numeric'],
             'buku_tersedia' => ['required' , 'max:100'],
-            'tanggal_masuk_buku' => ['required' ],
-            'update_terakhir' => ['required'  ],
+            'tahun_terbit' => ['required' , 'max:100'],
+            'created_at' => ['required' ],
+        'updated_at' => ['required'  ],
         ];
     }
 

@@ -2,16 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use App\Models\buku;
+use App\Models\order;
+use App\Models\anggota;
+use App\Models\Petugas;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\BukuResource;
+use App\Http\Resources\OrderResource;
 use App\Http\Resources\BukuCollection;
-use Illuminate\Database\Query\Builder;
+
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\BukuCreateRequest;
 use App\Http\Requests\bukuUpdateRequest;
+use App\Http\Requests\OrderCreateRequest;
+use Illuminate\Database\Eloquent\Builder;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
 
 class BukuPerpustakaan extends Controller
 {
@@ -19,35 +31,49 @@ class BukuPerpustakaan extends Controller
         $data = $request->validated();
         $data['id_buku'] = (String) Str::uuid();
 
+        $data['slug'] = SlugService::createSlug(Buku::class , 'slug' , $data['nama_buku']);
+        $qr = QrCode::format('png')->generate('pinjam-buku/'.$data['slug']);
+        $qrName = $data['slug'].'.png';
+        $qrPath = 'barcode/' . $qrName;
+        Storage::disk('public')->put($qrPath, $qr);
+
+        $data['gambar_qr'] =$qrPath;
         if($request->hasFile('gambar_buku')){
-
-
             $data['gambar_buku'] = $request->file('gambar_buku')->store('gambarBuku' , 'public');
         }
-
         $buku = new buku($data);
-     
         $buku->save();
-
         return (new BukuResource($buku))->response()->setStatusCode(201);
     }
 
     public function search_data(Request $request) : BukuCollection{
-        $buku = buku::all();
         $pageBuku = $request->input('page', 1);
         $size = $request->input('size' , 10);
 
         $buku = buku::query();
+
+        $buku->where(function (Builder $query) use ($request) {
             $name = $request->input('nama_buku');
+            $buku_tersedia = $request->input('buku_tersedia');
                    
-                    if($name) {
-                        $buku->where('nama_buku' , 'like' ,'%'.$name.'%');
-                    }
+            if($name) {
+                $query->where('nama_buku' , 'like' ,'%'.$name.'%');
+            }
+        
+             if($buku_tersedia !== null) {
+                $query->where('buku_tersedia' , $buku_tersedia);
+             }
+
+        });
 
         $buku = $buku->paginate(perPage : $size , page: $pageBuku);
         return  new BukuCollection($buku);
     }
 
+   public function bukuHabis () : BukuCollection{
+     $buku = buku::where('buku_tersedia' , 0)->get();
+     return  new BukuCollection($buku);
+   }
     public function detail_data($slugNamaBuku): BukuResource {
         $buku = buku::where('slug' , $slugNamaBuku)->first();
 
@@ -80,7 +106,6 @@ class BukuPerpustakaan extends Controller
 
 
         $data = $request->validated();
-
         if ($request->hasFile('gambar_buku')) {
     
             if ($buku->gambar_buku && Storage::disk('public')->exists($buku->gambar_buku)) {
@@ -88,14 +113,12 @@ class BukuPerpustakaan extends Controller
             }
     
             $data['gambar_buku'] = $request->file('gambar_buku')->store('gambarBuku', 'public');
-            // Path relatif sudah disimpan di $data['gambar_buku'].
-          
+
         }
-        // Update data buku
+  
         $buku->fill($data);
         $buku->save();
-    
-        // Return response sukses dengan data yang diperbarui
+
         return (new BukuResource($buku));
     }
     
@@ -118,6 +141,10 @@ class BukuPerpustakaan extends Controller
             Storage::disk('public')->delete($buku->gambar_buku);
         }
 
+        if($buku->gambar_qr && Storage::disk('public')->exists($buku->gambar_qr)){
+            Storage::disk('public')->delete($buku->gambar_qr);
+        }   
+
         $buku->delete();
         return response()->json([
             'data' =>true,
@@ -125,7 +152,42 @@ class BukuPerpustakaan extends Controller
        
     }
 
+    public function pinjamBuku(OrderCreateRequest $request) : JsonResponse{
+      
+            $petugas = Petugas::query()->limit(1)->first();
 
+            $dataOrder = $request->validated();
+            $dataOrder['id_order'] = (String) Str::uuid();
+            $dataOrder['id_petugas'] = $petugas->id_petugas;
+
+            $anggota = anggota::where('id_anggota' , $dataOrder['id_anggota'])->first();
+
+            $buku = buku::where('id_buku' , $dataOrder['id_buku'])->first();
+
+            if($anggota->credit_anggota >50 && $buku->buku_tersedia !=0) {
+
+                $order = new order($dataOrder);
+                $order->save();
+
+                 $anggota->credit_anggota -= 5;
+               $anggota->save();
+                
+               $buku->jumlah_buku -= 1;
+               if($buku->jumlah_buku == 0){
+              $buku->buku_tersedia = 0;
+               }
+               $buku->save();
+    
+                return (new OrderResource($order))->response()->setStatusCode(201);
+
+            } else {
+
+                return response()->json([
+                    'message'=> " Gagal Memperoses Permintaan"
+                ] , 422);
+            }
+         
+    }
 
 
 }

@@ -16,12 +16,13 @@ return new class extends Migration
             $table->string("slug" , 100);
             $table->string("nama_buku" , 100);
             $table->string("gambar_buku" , 100);
+            $table->string("gambar_qr" , 100);
             $table->string("nama_penulis" , 100);
             $table->string("nama_penerbit" , 100);   
+            $table->year("tahun_terbit"); 
             $table->integer("jumlah_buku");   
             $table->boolean("buku_tersedia" );  
-            $table->date("tanggal_masuk_buku");    
-            $table->date("update_terakhir");
+            $table->timestamps();
         });
     }
 

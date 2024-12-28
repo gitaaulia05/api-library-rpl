@@ -19,9 +19,15 @@ class ApiPerpusMiddleware
     public function handle(Request $request, Closure $next): Response
     {
 
-        $header = $request->header('Authorization');
-     
-        $token= str_replace('Bearer ', '', $request->header('Authorization'));
+        $token = $request->header('Authorization');
+    
+        \Log::info('Token diterima di backend:', ['token' => $token]);
+
+        if ($token && str_starts_with($token, 'Bearer ')) {
+            $token = substr($token, 7); // Ambil token tanpa "Bearer "
+           
+        }
+
 
         $authenticate = true;
 
@@ -38,6 +44,7 @@ class ApiPerpusMiddleware
             $authenticate = false;
             Log::warning('Petugas not found for token:', ['token' => $token]);
         } else {
+            Log::info('Petugas ditemukan', ['petugas' => $petugas]);
             Auth::login($petugas);
 
             

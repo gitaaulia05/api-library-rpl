@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use App\Models\Petugas;
 use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\PetugasResource;
@@ -31,9 +31,10 @@ class PetugasPerpustakaan extends Controller
         }
 
         $petugas->token = Str::uuid()->toString();
-        $petugas->save();
-     
 
+        \Log::info('Masuk kesini lagi' );
+        $petugas->save();
+    
         return new PetugasResource($petugas);
     }
 

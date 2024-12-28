@@ -12,7 +12,7 @@ class buku extends Model
     protected $table = "bukus";
     protected $primaryKey = "id_buku";
     protected $keyType = "string";
-    public $timestamps= false;
+
     public $incrementing = false;
 
 
@@ -21,12 +21,14 @@ class buku extends Model
         "slug",
         "nama_buku",
         "gambar_buku",
+        "gambar_qr",
         "nama_penulis",
         "nama_penerbit",
         "jumlah_buku",
         "buku_tersedia",
-        "tanggal_masuk_buku",
-        "update_terakhir"
+        "tahun_terbit",
+       "created_at",
+       "updated_at"
     ];
 
     public function sluggable(): array
