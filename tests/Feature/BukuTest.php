@@ -56,7 +56,7 @@ class BukuTest extends TestCase
      public function testLogout(){
         // $this->seed([PetugasSeeder::class]);
         $this->delete(uri: '/api/petugas/logout', headers: [
-            "Authorization" =>"21addaee-8085-4db1-81b8-cafb14286060"
+            "Authorization" =>"8b1c7a53-bae9-470a-a8c1-f6c279c271a"
         ])->assertStatus(200)->assertJson([
             "data" => true
         ]);
@@ -79,7 +79,7 @@ class BukuTest extends TestCase
             "created_at" => "2024-12-04",
             "updated_at" => "2024-12-04",
         ], [
-                'Authorization' =>"f9507097-24e1-46b0-933d-09498925a9f4"
+                'Authorization' =>"a8262976-735a-462c-9034-d6a72b2d80ae"
         ])
         ->assertStatus(201)
         ->assertJson([
@@ -102,13 +102,13 @@ class BukuTest extends TestCase
 
     public function testAnggotaCreate(){
         $this->post('/api/anggota' , [
-            "nama" => "yayash g", 
-            "email" => "yayash@gmail.com",
+            "nama" => "natti", 
+            "email" => "natti@gmail.com",
             "gambar_anggota" =>new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true)
         ] , [
-            'Authorization' => 'f9507097-24e1-46b0-933d-09498925a9f4'
+            'Authorization' => 'a8262976-735a-462c-9034-d6a72b2d80ae'
         ])->assertStatus(201)->assertJson([
-            "nama" => "yayash g", 
+            "nama" => "natti", 
             "email" => "yayash@gmail.com",
             "gambar_anggota" =>new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true)
         ]);
@@ -201,8 +201,7 @@ class BukuTest extends TestCase
 
     public function testCreateAnggota(){
         $response = $this->get('/api/anggota' , [
-           
-             "Authorization" => "test"
+             "Authorization" => "a8262976-735a-462c-9034-d6a72b2d80ae"
         ])->assertStatus(200)->json();
     }
 
@@ -210,18 +209,25 @@ class BukuTest extends TestCase
     public function testPinjamBuku(){
       
         $response = $this->post("/api/pinjam-buku/", [
-                'id_buku' => '81daa480-1da6-407e-a2fb-b401d3ae1816', 
-                'id_anggota' => 'a0bd7116-a181-4fe3-b018-b426d53893b8'
+                 'slug' => '30-cerita-teladan-islami', 
+                'id_anggota' => '02623d52-6a46-40e1-a47c-99659c10e4b4'
         ] ,[
-            'Authorization' => '4bb1ca0d-0060-4f22-b765-7cb1e9923132'
+            'Authorization' => 'a8262976-735a-462c-9034-d6a72b2d80ae'
         ])->assertStatus(201)->assertJson([
             'data' => [
-                'id_buku' => '81daa480-1da6-407e-a2fb-b401d3ae1816', 
-                'id_anggota' => 'a0bd7116-a181-4fe3-b018-b426d53893b8'
+                'slug' => '30-cerita-teladan-islami', 
+                'id_anggota' => '02623d52-6a46-40e1-a47c-99659c10e4b4'
             ]
         ])->json();
     
 
         Log::info(json_encode($response, JSON_PRETTY_PRINT));
+    }
+
+
+    public function testSearchPeminjamanAnggota() {
+        $response = $this->get('/api/peminjaman-anggota?nama_buku=30 Cerita Teladan Islami' , [
+            'Authorization' => "9796ef70-dee7-4a06-9805-0b57c4e2ae43"
+        ])->assertStatus(200)->json();
     }
 }

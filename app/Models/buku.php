@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Models\order;
 use Illuminate\Database\Eloquent\Model;
-
+use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class buku extends Model
 {
@@ -41,4 +42,7 @@ class buku extends Model
         ];
     }
     
+    public function detail_order() : hasMany {
+        return $this->hasMany(detail_order::class , 'id_buku' , 'id_buku');
+    }
 }

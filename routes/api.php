@@ -10,6 +10,9 @@ use App\Http\Controllers\PetugasPerpustakaan;
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
+
+route::get('/data' , [BukuPerpustakaan::class , 'data']);
+
 Route::post("/petugas/login" , [PetugasPerpustakaan::class, 'login']);
 
     Route::middleware(ApiPerpusMiddleware::class)->group(function(){
@@ -30,4 +33,7 @@ Route::post("/petugas/login" , [PetugasPerpustakaan::class, 'login']);
         Route::post("/anggota" , [AnggotaPerpustakaan::class, 'tambah_anggota']);
         //search Anggota
         Route::get("/anggota" , [AnggotaPerpustakaan::class, 'search_anggota']);
+
+        //Search peminjaman buku Anggota
+        Route::get("/peminjaman-anggota" , [AnggotaPerpustakaan::class , 'peminjamanAnggota']);
     });

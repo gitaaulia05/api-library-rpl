@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\order;
 use App\Models\anggota;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\AnggotaResource;
+use App\Http\Resources\OrderCollection;
 use App\Http\Resources\AnggotaCollection;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Requests\AnggotaCreateRequest;
+
+
 
 class AnggotaPerpustakaan extends Controller
 {
@@ -47,6 +51,22 @@ class AnggotaPerpustakaan extends Controller
             $anggotas = $anggota->paginate(perPage : $size , page : $pageBuku);
             return new AnggotaCollection($anggotas);
 
+        }
+
+        public function peminjamanAnggota(Request $request) : OrderCollection {
+            $pageBuku = $request->input('page' , 1);
+            $size = $request->input('size' , 10);
+            $nama_buku = $request->input('nama_buku');
+
+            $order = order::with(['detail_order.buku'])->whereHas('detail_order.buku' , function ($query) use ($nama_buku) {
+                if($nama_buku) {
+                            $query->where('nama_buku' , 'like' , '%'. $nama_buku .'%');
+                        }
+            });
+            
+            $order = $order->paginate(perPage : $size , page: $pageBuku);
+
+            return new OrderCollection($order);
         }
 
 

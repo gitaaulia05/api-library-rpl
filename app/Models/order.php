@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\order;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class order extends Model
 {
@@ -14,8 +16,12 @@ class order extends Model
 
     protected $fillable = [
         "id_order",
-        "id_buku",
         "id_petugas",
         "id_anggota"
     ];
+
+    public function detail_order() : hasMany {
+        return $this->hasMany(detail_order::class , 'id_order' , 'id_order');
+    }
+
 }

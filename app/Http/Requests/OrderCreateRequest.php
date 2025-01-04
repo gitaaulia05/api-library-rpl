@@ -22,7 +22,7 @@ class OrderCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id_buku' => ['required' , 'max:100'],
+            'slug' => ['required' , 'max:100'],
             'id_anggota' => ['required' , 'max:100'],
         ];
     }

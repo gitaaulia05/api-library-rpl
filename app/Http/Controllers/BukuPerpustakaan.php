@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Log;
 use App\Models\buku;
 use App\Models\order;
+use App\Models\detail_order;
 use App\Models\anggota;
 use App\Models\Petugas;
 use Illuminate\Support\Str;
@@ -27,6 +28,8 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class BukuPerpustakaan extends Controller
 {
+
+    
     public function create(BukuCreateRequest $request): JsonResponse{
         $data = $request->validated();
         $data['id_buku'] = (String) Str::uuid();
@@ -162,13 +165,10 @@ class BukuPerpustakaan extends Controller
 
             $anggota = anggota::where('id_anggota' , $dataOrder['id_anggota'])->first();
 
-            $buku = buku::where('id_buku' , $dataOrder['id_buku'])->first();
+            $buku = buku::where('slug' , $dataOrder['slug'])->first();
+            // $dataOrder['id_buku'] = $buku->id_buku;
 
             if($anggota->credit_anggota >50 && $buku->buku_tersedia !=0) {
-
-                $order = new order($dataOrder);
-                $order->save();
-
                  $anggota->credit_anggota -= 5;
                $anggota->save();
                 
@@ -177,9 +177,18 @@ class BukuPerpustakaan extends Controller
               $buku->buku_tersedia = 0;
                }
                $buku->save();
-    
-                return (new OrderResource($order))->response()->setStatusCode(201);
+               $order = new order($dataOrder);
+               $order->save();
 
+               $detailOrder = detail_order::create([
+                'id_detail_order' => (String) Str::uuid(),
+                'id_order' => $dataOrder['id_order'],
+                'id_buku' => $buku->id_buku
+               ]);
+
+               $detailOrder->save();
+
+                return (new OrderResource($order))->response()->setStatusCode(201);
             } else {
 
                 return response()->json([
@@ -188,6 +197,6 @@ class BukuPerpustakaan extends Controller
             }
          
     }
-
+    
 
 }
