@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use App\Console\Commands\ExecuteCronJobs;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -15,5 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        
+    })->withSchedule(function(Schedule $schedule){
+       $schedule->command('execute:job')->everyMinute();
+    //    $schedule->command('execute:job')->timezone('Asia/Jakarta')->at('00:00');
     })->create();

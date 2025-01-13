@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\order;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 
@@ -32,6 +33,10 @@ class anggota extends Model
                 'onUpdate' => true,
             ]
         ];
+    }
+
+    public function order () : hasMany {
+        return $this->hasMany( order::class , 'id_anggota' , 'id_anggota');
     }
     
 }

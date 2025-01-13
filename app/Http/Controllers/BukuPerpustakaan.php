@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use Log;
 use App\Models\buku;
 use App\Models\order;
-use App\Models\detail_order;
 use App\Models\anggota;
 use App\Models\Petugas;
 use Illuminate\Support\Str;
+use App\Models\detail_order;
 use Illuminate\Http\Request;
 
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\BukuResource;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\OrderResource;
-use App\Http\Resources\BukuCollection;
 
+use App\Http\Resources\BukuCollection;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\BukuCreateRequest;
 use App\Http\Requests\bukuUpdateRequest;
@@ -84,7 +85,7 @@ class BukuPerpustakaan extends Controller
             throw new HttpResponseException(response()->json([
                 'errors' => [
                     "message" => [
-                        " Buku tidak ditemukan"
+                        "Buku Tidak Ditemukan"
                     ]
                 ]
             ])->setStatusCode(404));
@@ -156,12 +157,11 @@ class BukuPerpustakaan extends Controller
     }
 
     public function pinjamBuku(OrderCreateRequest $request) : JsonResponse{
-      
-            $petugas = Petugas::query()->limit(1)->first();
 
+            $petugas = Auth::id();
             $dataOrder = $request->validated();
             $dataOrder['id_order'] = (String) Str::uuid();
-            $dataOrder['id_petugas'] = $petugas->id_petugas;
+            $dataOrder['id_petugas'] = $petugas;
 
             $anggota = anggota::where('id_anggota' , $dataOrder['id_anggota'])->first();
 

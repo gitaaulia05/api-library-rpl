@@ -34,6 +34,17 @@ Route::post("/petugas/login" , [PetugasPerpustakaan::class, 'login']);
         //search Anggota
         Route::get("/anggota" , [AnggotaPerpustakaan::class, 'search_anggota']);
 
-        //Search peminjaman buku Anggota
-        Route::get("/peminjaman-anggota" , [AnggotaPerpustakaan::class , 'peminjamanAnggota']);
+        //Detail-anggota-peminjaman - tabel list peminjaman buku
+        Route::get('/detail-anggota/{slugAnggota}' , [AnggotaPerpustakaan::class , 'detail_anggota']);
+
+        //Search peminjaman buku Anggota - tabel list peminjaman buku
+        Route::get("/peminjaman-anggota/{slugAnggota}" , [AnggotaPerpustakaan::class , 'peminjamanAnggota']);
+
+        // detail pengembalian buku
+        Route::get('/pengembalian-buku/{idOrder}' , [AnggotaPerpustakaan::class , 'detailOrder']);
+
+        // Post Pengembalian Buku
+        Route::post('/pengembalian-simpan/{idOrder}' , [AnggotaPerpustakaan::class , 'simpanPengembalian']);
+
+
     });

@@ -28,8 +28,8 @@ class buku extends Model
         "jumlah_buku",
         "buku_tersedia",
         "tahun_terbit",
-       "created_at",
-       "updated_at"
+        "created_at",
+        "updated_at"
     ];
 
     public function sluggable(): array

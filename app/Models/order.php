@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\order;
+use App\Models\detail_order;
+use App\Models\anggota;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class order extends Model
 {
@@ -22,6 +24,10 @@ class order extends Model
 
     public function detail_order() : hasMany {
         return $this->hasMany(detail_order::class , 'id_order' , 'id_order');
+    }
+
+    public function anggota () : belongsTo {
+        return $this->BelongsTo(anggota::class , 'id_anggota' , 'id_anggota');
     }
 
 }

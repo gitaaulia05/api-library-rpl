@@ -27,7 +27,7 @@ class Petugas extends Model implements Authenticatable
     }
 
     public function getAuthIdentifier(){
-            return $this->username;
+            return $this->id_petugas;
     }
 
     public function getAuthPassword(){

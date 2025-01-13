@@ -4,10 +4,13 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\buku;
+use App\Models\order;
+use App\Models\detail_order;
+use App\Models\anggota;
+
+
 use App\Models\Petugas;
 use Illuminate\Support\Str;
-
-
 use Illuminate\Http\UploadedFile;
 use Database\Seeders\PetugasSeeder;
 use Illuminate\Support\Facades\Log;
@@ -22,12 +25,13 @@ class BukuTest extends TestCase
      */
 
      public function testPetugasLogin(){
-        $this->seed([PetugasSeeder::class]);
+        // $this->seed([PetugasSeeder::class]);
 
         $this->post('api/petugas/login' , [
             'username' => 'yayaa100',
             'password' => 'test',
 
+            
         ])->assertStatus(200)->assertJson([
             'data' => [
                 'username' => 'yayaa100',
@@ -102,14 +106,14 @@ class BukuTest extends TestCase
 
     public function testAnggotaCreate(){
         $this->post('/api/anggota' , [
-            "nama" => "natti", 
-            "email" => "natti@gmail.com",
+            "nama" => "hyuna", 
+            "email" => "hyuna@gmail.com",
             "gambar_anggota" =>new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true)
         ] , [
-            'Authorization' => 'a8262976-735a-462c-9034-d6a72b2d80ae'
+            'Authorization' => 'a759dc03-b052-4e2f-b07a-5da630147d33'
         ])->assertStatus(201)->assertJson([
-            "nama" => "natti", 
-            "email" => "yayash@gmail.com",
+            "nama" => "hyuna", 
+            "email" => "hyuna@gmail.com",
             "gambar_anggota" =>new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true)
         ]);
     }
@@ -210,13 +214,13 @@ class BukuTest extends TestCase
       
         $response = $this->post("/api/pinjam-buku/", [
                  'slug' => '30-cerita-teladan-islami', 
-                'id_anggota' => '02623d52-6a46-40e1-a47c-99659c10e4b4'
+                'id_anggota' => '30892be2-f96c-4910-b933-264835ecfaf4'
         ] ,[
-            'Authorization' => 'a8262976-735a-462c-9034-d6a72b2d80ae'
+            'Authorization' => 'fe1ddb81-3a0a-4e73-a009-cb384cc5479d'
         ])->assertStatus(201)->assertJson([
             'data' => [
                 'slug' => '30-cerita-teladan-islami', 
-                'id_anggota' => '02623d52-6a46-40e1-a47c-99659c10e4b4'
+                'id_anggota' => '30892be2-f96c-4910-b933-264835ecfaf4'
             ]
         ])->json();
     
@@ -224,10 +228,43 @@ class BukuTest extends TestCase
         Log::info(json_encode($response, JSON_PRETTY_PRINT));
     }
 
+    public function testDetailAnggota() {
+        $anggota = anggota::query()->limit(1)->first();
+        $response = $this->get("/api/detail-anggota/".$anggota->slug , [
+            'Authorization' => "a759dc03-b052-4e2f-b07a-5da630147d33"
+        ])->assertStatus(200)->json();
+    }
 
     public function testSearchPeminjamanAnggota() {
-        $response = $this->get('/api/peminjaman-anggota?nama_buku=30 Cerita Teladan Islami' , [
-            'Authorization' => "9796ef70-dee7-4a06-9805-0b57c4e2ae43"
+        $anggota = anggota::query()->limit(1)->first();
+        $response = $this->get('/api/peminjaman-anggota/'.$anggota->slug.'?nama_buku=30 Cerita Teladan Islami' , [
+            'Authorization' => "a759dc03-b052-4e2f-b07a-5da630147d33"
+        ])->assertStatus(200)->json();
+    }
+
+    public function testDetailOrder() {
+        $order = order::query()->limit(1)->first();
+        $response = $this->get("/api/pengembalian-buku/".$order->id_order  , [
+               'Authorization' => "0977bf3a-9799-4941-8402-40cca2e8cded"
+        ])->assertStatus(200)->json();
+    }
+
+    public function testPengembalian() {
+        $order = detail_order::query()->limit(1)->first();
+        $response = $this->withSession(['telat' => true])->post("/api/pengembalian-simpan/b0df2755-3eab-444c-999d-d14a5da216b0" , [
+            'id_order' => "b0df2755-3eab-444c-999d-d14a5da216b0"
+        ], [
+            "Authorization" => "994bd39e-9760-415a-a090-b6076676e29f"
+        ])->assertStatus(200)->json();
+    }
+
+
+    public function testPengembalian1() {
+        $order = detail_order::query()->limit(1)->first();
+        $response = $this->withSession(['telat' => true])->post("/api/pengembalian-simpan/4d142061-2126-4036-b822-dd50d35469e4" , [
+            'id_order' => "4d142061-2126-4036-b822-dd50d35469e4"
+        ], [
+            "Authorization" => "994bd39e-9760-415a-a090-b6076676e29f"
         ])->assertStatus(200)->json();
     }
 }

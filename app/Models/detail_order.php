@@ -25,6 +25,6 @@ class detail_order extends Model
     }
 
     public function buku() : belongsTo {
-        return $this->BelongsTo(buku::class , 'id_buku' , 'id_buku');
+        return $this->belongsTo(buku::class , 'id_buku' , 'id_buku');
     }
 }
