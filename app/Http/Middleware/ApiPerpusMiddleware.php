@@ -58,7 +58,7 @@ class ApiPerpusMiddleware
             return response()->json([
                 'errors' => [
                     "message" => [
-                        "unathorize"
+                        "Tidak ter-authentikasi"
                     ]
                 ]
             ])->setStatusCode(401);

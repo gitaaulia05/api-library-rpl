@@ -32,7 +32,9 @@ class OrderResource extends JsonResource
                         "nama_buku" => $detail->buku->nama_buku,
                         "gambar_buku" => $detail->buku->gambar_buku,
                         "buku_dikembalikan" => $detail->buku_dikembalikan,
+                        "is_telat" => $detail->is_telat,
                         "created_at" =>Carbon::parse($detail->created_at)->format('Y-m-d') ,
+                        "updated_at" => $detail->updated_at,
                 ];
             }),
         ];

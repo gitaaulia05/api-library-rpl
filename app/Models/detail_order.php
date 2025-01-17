@@ -17,7 +17,8 @@ class detail_order extends Model
             'id_detail_order', 
             'id_order',
             'id_buku',
-            'buku_dikembalikan'
+            'buku_dikembalikan',
+            'is_telat'
     ];
 
     public function order() : belongsTo {

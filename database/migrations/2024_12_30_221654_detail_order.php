@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('id_buku');
             $table->foreign('id_buku')->references('id_buku')->on('bukus');
             $table->char('buku_dikembalikan' , 1)->default(0);
+            $table->boolean('is_telat')->default(false);
             $table->timestamps();
         });
     }

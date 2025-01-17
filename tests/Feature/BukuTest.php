@@ -71,7 +71,7 @@ class BukuTest extends TestCase
         //  $this->seed([PetugasSeeder::class]);
  
         $this->post('/api/buku' , [
-          "id_buku" => "235520110700",
+      
             "nama_buku_slug" => "30-Cerita-Teladan-Islami",
             "nama_buku" => "30 Cerita Teladan Islami",
             "gambar_buku" => new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true),
@@ -83,7 +83,7 @@ class BukuTest extends TestCase
             "created_at" => "2024-12-04",
             "updated_at" => "2024-12-04",
         ], [
-                'Authorization' =>"a8262976-735a-462c-9034-d6a72b2d80ae"
+                'Authorization' =>"b8280b2a-b65d-4fd8-99a4-51fca575f3c"
         ])
         ->assertStatus(201)
         ->assertJson([

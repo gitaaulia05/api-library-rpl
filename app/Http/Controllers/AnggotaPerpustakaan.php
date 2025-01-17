@@ -100,6 +100,7 @@ class AnggotaPerpustakaan extends Controller
         }
 
         public function simpanPengembalian(DetailOrderUpdateRequest $request , $idOrder)  {
+            $sessionTelat = $request->input('session_telat' ,[]);
             Log::info("Request masuk dengan id_order: $idOrder");
 
             $detailOrder = detail_order::with(['buku'] , ['order.anggota'])->where('id_order' , $idOrder)->first();
@@ -116,12 +117,14 @@ class AnggotaPerpustakaan extends Controller
                     $detailOrder->buku->save();
                 }
 
+                    // testing pake ini
+                // if(session()->get('telat') == true){
 
-                if(session()->get('telat') == true){
+                if(isset($sessionTelat['telat']) && $sessionTelat['telat'] === 'true'){
                     Log::info('Session Telat:', ['telat' => session()->get('telat')]);
-
+                    $detailOrder->is_telat = 1;
+                    $detailOrder->save();
                     // jalankan cronjob 
-
                     $executeAt = now()->addMinutes(1);
 
                     DB::table('cron_jobs')->insert([

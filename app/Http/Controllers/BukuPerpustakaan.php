@@ -59,6 +59,8 @@ class BukuPerpustakaan extends Controller
         $buku->where(function (Builder $query) use ($request) {
             $name = $request->input('nama_buku');
             $buku_tersedia = $request->input('buku_tersedia');
+
+
                    
             if($name) {
                 $query->where('nama_buku' , 'like' ,'%'.$name.'%');
