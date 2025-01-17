@@ -11,7 +11,7 @@ use App\Http\Controllers\PetugasPerpustakaan;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-route::get('/data' , [BukuPerpustakaan::class , 'data']);
+Route::get("/faker" , [BukuPerpustakaan::class , 'data']);
 
 Route::post("/petugas/login" , [PetugasPerpustakaan::class, 'login']);
 

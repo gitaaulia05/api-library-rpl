@@ -24,6 +24,10 @@ class BukuTest extends TestCase
      * A basic feature test example.
      */
 
+
+     public function testFaker (){
+        $this->get('api/faker')->assertStatus(200)->json();
+     }
      public function testPetugasLogin(){
         // $this->seed([PetugasSeeder::class]);
 
@@ -45,9 +49,9 @@ class BukuTest extends TestCase
 
 
      public function testGetPetugas(){
-        $this->seed([PetugasSeeder::class]);
+        // $this->seed([PetugasSeeder::class]);
         $this->get('/api/petugas/saatIni' , [
-            "Authorization" => "test"
+            "Authorization" => "5726a87c-2dca-4ff0-b188-ddac333bde6c"
             
         ])->assertStatus(200)->assertJson([
             "data"=> [

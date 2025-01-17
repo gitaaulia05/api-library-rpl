@@ -30,6 +30,14 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class BukuPerpustakaan extends Controller
 {
 
+
+    public function data(){
+        $data  = [
+            'nama' => "gita "
+        ];
+
+        return response()->json($data);
+    }
     
     public function create(BukuCreateRequest $request): JsonResponse{
         $data = $request->validated();
