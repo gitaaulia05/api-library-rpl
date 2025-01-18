@@ -29,7 +29,7 @@ class BukuTest extends TestCase
         $this->get('api/faker')->assertStatus(200)->json();
      }
      public function testPetugasLogin(){
-        // $this->seed([PetugasSeeder::class]);
+        $this->seed([PetugasSeeder::class]);
 
         $this->post('api/petugas/login' , [
             'username' => 'yayaa100',
@@ -51,7 +51,7 @@ class BukuTest extends TestCase
      public function testGetPetugas(){
         // $this->seed([PetugasSeeder::class]);
         $this->get('/api/petugas/saatIni' , [
-            "Authorization" => "5726a87c-2dca-4ff0-b188-ddac333bde6c"
+            "Authorization" => "bb25d753-ca2d-4fd4-be38-696bbfcb8c5a"
             
         ])->assertStatus(200)->assertJson([
             "data"=> [
@@ -64,7 +64,7 @@ class BukuTest extends TestCase
      public function testLogout(){
         // $this->seed([PetugasSeeder::class]);
         $this->delete(uri: '/api/petugas/logout', headers: [
-            "Authorization" =>"8b1c7a53-bae9-470a-a8c1-f6c279c271a"
+            "Authorization" =>"67b9cf19-f5cb-4a15-a961-30545734c21c"
         ])->assertStatus(200)->assertJson([
             "data" => true
         ]);

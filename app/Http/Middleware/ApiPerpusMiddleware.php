@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Models\petugas;
+use App\Models\Petugas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +37,7 @@ class ApiPerpusMiddleware
         }
 
      
-        $petugas = petugas::where('token' , $token)->first();
+        $petugas = Petugas::where('token' , $token)->first();
        
 
         if(!$petugas){
