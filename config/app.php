@@ -28,6 +28,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'asset_url' => env('ASSET_URL', 'https://api-library-rpl-production.up.railway.app/'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
