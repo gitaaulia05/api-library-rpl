@@ -28,7 +28,7 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
-    'asset_url' => env('ASSET_URL', 'https://api-library-rpl-production.up.railway.app/'),
+    'asset_url' => env('ASSET_URL', 'http://api-library.test/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://api-library.test/'),
 
     /*
     |--------------------------------------------------------------------------

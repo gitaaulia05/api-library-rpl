@@ -50,6 +50,7 @@ class BukuPerpustakaan extends Controller
         Storage::disk('public')->put($qrPath, $qr);
 
         $data['gambar_qr'] =$qrPath;
+
         if($request->hasFile('gambar_buku')){
             $data['gambar_buku'] = $request->file('gambar_buku')->store('gambarBuku' , 'public');
         }
@@ -60,16 +61,16 @@ class BukuPerpustakaan extends Controller
 
     public function search_data(Request $request) : BukuCollection{
         $pageBuku = $request->input('page', 1);
-        $size = $request->input('size' , 10);
+        $size = $request->input('size' , 15);
 
         $buku = buku::query();
 
-        $buku->where(function (Builder $query) use ($request) {
-            $name = $request->input('nama_buku');
-            $buku_tersedia = $request->input('buku_tersedia');
+        $name = $request->input('nama_buku');
+        $buku_tersedia = $request->input('buku_tersedia');
 
-
-                   
+        $buku->where(function (Builder $query) use ($name , $buku_tersedia) {
+          
+     
             if($name) {
                 $query->where('nama_buku' , 'like' ,'%'.$name.'%');
             }
@@ -80,7 +81,10 @@ class BukuPerpustakaan extends Controller
 
         });
 
-        $buku = $buku->paginate(perPage : $size , page: $pageBuku);
+        $buku = $buku->paginate(perPage : $size , page: $pageBuku)->appends([
+            'nama_buku'=>$name,
+            'buku_tersedia'=>$buku_tersedia,
+        ]);
         return  new BukuCollection($buku);
     }
 
@@ -106,6 +110,7 @@ class BukuPerpustakaan extends Controller
     }
     public function updateBuku( BukuUpdateRequest $request , $slugNamaBuku): BukuResource
     {
+
         $buku = Buku::where('slug', $slugNamaBuku)->first();
     
         if(!$buku){
@@ -127,8 +132,23 @@ class BukuPerpustakaan extends Controller
             }
     
             $data['gambar_buku'] = $request->file('gambar_buku')->store('gambarBuku', 'public');
-
+ 
+        } else {
+            $data['gambar_buku'] = $request->gambar_lama;
         }
+
+        if($request->nama_buku && $request->nama_buku !== $buku->nama_buku){
+            $data['slug'] = SlugService::createSlug(Buku::class , 'slug' , $data['nama_buku']);
+            $qr = Qrcode::format('png')->generate('pinjam-buku/'.$data['slug']);
+            $qrName = $data['slug'].'.png';
+            $qrPath = 'barcode/'.$qrName;
+            if($buku->gambar_qr && Storage::disk('public')->exists($buku->gambar_qr)){
+                Storage::disk('public')->delete($buku->gambar_qr);
+            }
+            storage::disk('public')->put($qrPath,$qr);
+            $data['gambar_qr'] = $qrPath;
+        }
+
   
         $buku->fill($data);
         $buku->save();
@@ -140,17 +160,28 @@ class BukuPerpustakaan extends Controller
 
     public function deleteBuku($slugNamaBuku){
         $buku = buku::where('slug' , $slugNamaBuku )->first();
-
         if(!$buku){
             throw new HttpResponseException(response()->json([
                 'errors' => [
                     "message" => [
-                        " Buku tidak ditemukan"
+                        "Buku tidak ditemukan"
                     ]
                 ]
             ])->setStatusCode(404));
         }
 
+        $order = detail_order::where('id_buku' , $buku->id_buku)->count();
+         if($order > 0) {
+            throw new HttpResponseException(response()->json([
+                "errors" => [
+                    "message" => [
+                        "Buku tidak dapat dihapus karena masih terdapat dalam Riwayat Peminjaman"
+                    ]
+                ]
+                   
+            ])->setStatusCode(400));
+         }
+         
         if ($buku->gambar_buku && Storage::disk('public')->exists($buku->gambar_buku)) {
             Storage::disk('public')->delete($buku->gambar_buku);
         }
@@ -202,7 +233,7 @@ class BukuPerpustakaan extends Controller
             } else {
 
                 return response()->json([
-                    'message'=> " Gagal Memperoses Permintaan"
+                    'message'=> "Gagal Memperoses Permintaan !"
                 ] , 422);
             }
          

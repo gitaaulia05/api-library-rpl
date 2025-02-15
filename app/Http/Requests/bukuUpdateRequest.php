@@ -27,12 +27,13 @@ class bukuUpdateRequest extends FormRequest
         return [
             'nama_buku' => ['required' , 'max:100'],
             'gambar_buku' => ['nullable' , 'image' , 'mimes:jpeg,png,jpg|max:2048'],
+            'gambar_qr' => ['nullable' , 'image' , 'mimes:jpeg,png,jpg|max:2048'],
             'nama_penulis' => ['required' , 'max:100'],
             'nama_penerbit' => ['required' , 'max:100'],
             'jumlah_buku' => ['required' , 'numeric'],
-            'buku_tersedia' => ['required' , 'max:100'],
-            'created_at' => ['required' ],
-            'updated_at' => ['required'  ],
+            'buku_tersedia' => ['required' , 'max:100' , 'numeric'],
+            'created_at' => ['required' , 'date'],
+            // 'updated_at' => ['required'],
         ];
     }
 

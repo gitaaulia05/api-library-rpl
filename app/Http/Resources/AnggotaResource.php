@@ -14,7 +14,7 @@ class AnggotaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        // return parent::toArray($request);
 
         return [
             'id_anggota' => $this->id_anggota,
@@ -24,6 +24,8 @@ class AnggotaResource extends JsonResource
             'email' => $this->email,
             'credit_anggota' => $this->credit_anggota,
         
+           
+
         ];
     }
 }

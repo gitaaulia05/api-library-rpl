@@ -35,6 +35,7 @@ class OrderResource extends JsonResource
                         "is_telat" => $detail->is_telat,
                         "created_at" =>Carbon::parse($detail->created_at)->format('Y-m-d') ,
                         "updated_at" => $detail->updated_at,
+                        "dikembalikan_pada" => Carbon::parse($detail->dikembalikan_pada)->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s')
                 ];
             }),
         ];

@@ -40,16 +40,13 @@ class AnggotaPerpustakaan extends Controller
 
         public function search_anggota(Request $request) : AnggotaCollection {
             $pageBuku = $request->input('page' , 1);
-            $size = $request->input('size' , 10);
+            $size = $request->input('size' ,15);
 
             $anggota = anggota::query();
-            
-            $anggota->where(function (Builder $query) use ($request){
-
+            $anggota->where(function (Builder $query) use ($request) {
                 $nama = $request->input('nama');
-
-                if($nama) {
-                    $query->where('nama' , 'like' , '%'. $nama. '%');
+                if ($nama) {
+                    $query->where('nama', 'like', '%' . $nama . '%');
                 }
             });
 
@@ -75,18 +72,29 @@ class AnggotaPerpustakaan extends Controller
 
         public function peminjamanAnggota(Request $request , $slugAnggota) : OrderCollection {
             $pageBuku = $request->input('page' , 1);
-            $size = $request->input('size' , 10);
-            $nama_buku = $request->input('nama_sebuku');
-             
-                $order = order::with( [ 'anggota' , 'detail_order.buku'])->whereHas('anggota' , function($data) use($slugAnggota) {
+            $size = $request->input('size' , 15);
+            $nama_buku = $request->input('nama_buku');
+        //   $stok_buku = is_numeric($request->input('buku_dikembalikan')) ? (int) $request->input('buku_dikembalikan') : null;
+
+        $stok_buku = $request->input('buku_dikembalikan');
+
+                $order = order::with( [ 'anggota' , 'detail_order.buku' , 'detail_order'])->whereHas('anggota' , function($data) use($slugAnggota) {
                     $data->where('slug' , $slugAnggota);
                 })->whereHas('detail_order.buku' , function ($query) use ($nama_buku) {
                     if($nama_buku) {    
                                 $query->where('nama_buku' , 'like' , '%'. $nama_buku .'%');
                             }
-                });
+                })->whereHas('detail_order' , function($querys) use ($stok_buku){
+                   if($stok_buku !== null){
+                    $querys->where('buku_dikembalikan' , $stok_buku);
+                   }
+
+        });
             
-            $order = $order->paginate(perPage : $size , page: $pageBuku);
+            $order = $order->paginate(perPage : $size , page: $pageBuku)->appends([
+                'buku_dikembalikan' => $stok_buku,
+                'nama_buku'=>$nama_buku
+            ]);
 
             return new OrderCollection($order);
         }
@@ -123,7 +131,9 @@ class AnggotaPerpustakaan extends Controller
                 if(isset($sessionTelat['telat']) && $sessionTelat['telat'] === 'true'){
                     Log::info('Session Telat:', ['telat' => session()->get('telat')]);
                     $detailOrder->is_telat = 1;
+                    $detailOrder->dikembalikan_pada = now()->addMinutes(1);
                     $detailOrder->save();
+                  
                     // jalankan cronjob 
                     $executeAt = now()->addMinutes(1);
 

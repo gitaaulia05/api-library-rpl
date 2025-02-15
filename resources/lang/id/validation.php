@@ -95,6 +95,7 @@ return [
     'password'             => 'Kata sandi salah.',
     'present'              => ':attribute wajib ada.',
     'regex'                => 'Format :attribute tidak valid.',
+    'jumlah_buku.required' => 'Kolom jumlah buku wajib diisi.',
     'required'             => ':attribute wajib diisi.',
     'required_if'          => ':attribute wajib diisi bila :other adalah :value.',
     'required_unless'      => ':attribute wajib diisi kecuali :other memiliki nilai :values.',
@@ -146,5 +147,6 @@ return [
     */
 
     'attributes' => [
+        'jumlah_buku' => 'Jumlah Buku',
     ],
 ];

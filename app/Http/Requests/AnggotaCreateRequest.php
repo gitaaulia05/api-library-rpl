@@ -26,7 +26,7 @@ class AnggotaCreateRequest extends FormRequest
     {
         return [
             'nama' => ['required' , 'max:100'],
-            'email' => ['required' , 'max:100' , 'email'],
+            'email' => ['required' , 'max:100' , 'email' , 'unique:anggotas'],
             'gambar_anggota' => [ 'image', 'mimes:jpeg,png,jpg|max:2048' ],
         ];
     }

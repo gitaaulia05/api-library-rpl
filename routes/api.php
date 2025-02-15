@@ -14,7 +14,6 @@ use App\Http\Controllers\PetugasPerpustakaan;
 Route::get("/faker" , [BukuPerpustakaan::class , 'data']);
 
 Route::post("/petugas/login" , [PetugasPerpustakaan::class, 'login']);
-
     Route::middleware(ApiPerpusMiddleware::class)->group(function(){
         
         Route::get("/petugas/saatIni" , [PetugasPerpustakaan::class, 'getCurrentPetugas']);

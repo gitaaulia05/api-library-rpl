@@ -27,8 +27,8 @@ class BukuResource extends JsonResource
             "jumlah_buku"=> $this->jumlah_buku,
             "buku_tersedia"=> $this->buku_tersedia,
             "tahun_terbit"=> $this->tahun_terbit,
-            "created_at"=> Carbon::parse($this->created_at)->format('Y-m-d'),
-            "updated_at"=> Carbon::parse($this->updated_at)->format('Y-m-d'),
+           "created_at" => Carbon::parse($this->created_at)->format('Y-m-d'),
+// "updated_at" => Carbon::parse($this->updated_at)->format('Y-m-d'),
            
         ];
     }

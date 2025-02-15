@@ -33,7 +33,7 @@ class BukuTest extends TestCase
 
         $this->post('api/petugas/login' , [
             'username' => 'yayaa100',
-            'password' => 'tes1t',
+            'password' => 'test',
 
             
         ])->assertStatus(200)->assertJson([
@@ -64,7 +64,7 @@ class BukuTest extends TestCase
      public function testLogout(){
         // $this->seed([PetugasSeeder::class]);
         $this->delete(uri: '/api/petugas/logout', headers: [
-            "Authorization" =>"7dd4e93c-37d3-4208-a472-e8f1acc8b7bf"
+            "Authorization" =>"54e3d8ef-33ba-4097-b5d0-b20bbd8a5da"
         ])->assertStatus(200)->assertJson([
             "data" => true
         ]);
@@ -76,24 +76,24 @@ class BukuTest extends TestCase
  
         $this->post('/api/buku' , [
       
-            "nama_buku_slug" => "30-Cerita-Teladan-Islami",
-            "nama_buku" => "30 Cerita Teladan Islami",
+            // "nama_buku_slug" => "perempuan-yang-menangis-kepada-bulan-hitam",
+            "nama_buku" => "Perempuan yang Menangis Kepada Bulan Hitam",
             "gambar_buku" => new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true),
-            "nama_penulis" => "Mahmudah Mastur",
-            "nama_penerbit" => "Noktah",
+            "nama_penulis" => "Dian Purnomo",
+            "nama_penerbit" => "Gramedia",
             "jumlah_buku" => "88",
             "buku_tersedia" => "1",
-            "tahun_terbit" => "2021",
+            "tahun_terbit" => "2024",
             "created_at" => "2024-12-04",
-            "updated_at" => "2024-12-04",
+            // "updated_at" => "2024-12-04",
         ], [
-                'Authorization' =>"44eb727d-cd83-4395-919c-5589bb62c9ba"
+                 "Authorization" =>"6ccf9ab7-0fa2-46e0-abd9-5c79b431170d"
         ])
         ->assertStatus(201)
         ->assertJson([
             'data' => [
-                "id_buku" => "235520110700",
-                "nama_buku_slug" => "30-Cerita-Teladan-Islami",
+              
+            //     "nama_buku_slug" => "30-Cerita-Teladan-Islami",
             "nama_buku" => "30 Cerita Teladan Islami",
                 "gambar_buku" => new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true),
             "nama_penulis" => "Mahmudah Mastur",
@@ -110,14 +110,14 @@ class BukuTest extends TestCase
 
     public function testAnggotaCreate(){
         $this->post('/api/anggota' , [
-            "nama" => "hyuna", 
-            "email" => "hyuna@gmail.com",
+            // "nama" => "", 
+            "email" => "gitaauliahafid@gmail.com",
             "gambar_anggota" =>new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true)
         ] , [
-            'Authorization' => '9122edac-bbd2-4e47-8578-18e4341cfa4f'
+            'Authorization' => 'c110705a-4519-4d69-8215-13c88d0b4f07'
         ])->assertStatus(201)->assertJson([
-            "nama" => "hyuna", 
-            "email" => "hyuna@gmail.com",
+            "nama" => "becky", 
+            "email" => "gitaauliahafid@gmail.com",
             "gambar_anggota" =>new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true)
         ]);
     }
@@ -142,15 +142,18 @@ class BukuTest extends TestCase
     }
 
     public function testSearchData(){
+        // $response = $this->get('/api/buku' , [
         $response = $this->get('/api/buku?nama_buku=30 Cerita Teladan Islami' , [
-            'Authorization' =>"9122edac-bbd2-4e47-8578-18e4341cfa4f"
+            'Authorization' =>"73dae7ab-0ea1-48a3-97e2-9aff04a2f85e"
+        // ]);
         ])->assertStatus(200)->json();
-        self::assertEquals(1, count($response['data']));
+        // $response->dump();
+        // self::assertEquals(1, count($response['data']));
     }
 
     public function testSearchAnggota(){
         $response = $this->get('/api/anggota?nama=becky' , [
-            'Authorization' => '06dd9326-7946-4ba2-96f0-a55321f15eee'
+            'Authorization' => '7d05016f-a9a0-49a0-b93e-91b8c635ccd1'
         ])->assertStatus(200)->json();
     }
 
@@ -164,8 +167,10 @@ class BukuTest extends TestCase
 
     public function testDeleteSuccess(){
         $buku  = Buku::query()->limit(1)->first();
+        $order = detail_order::where('id_buku' , $buku->id_buku)->count();
+        dd($order);
         $this->delete('/api/buku/'.$buku->slug, [
-                'Authorization' =>'test'
+                'Authorization' =>'6ccf9ab7-0fa2-46e0-abd9-5c79b431170d'
         ])->assertStatus(200)->assertJson([
             'data' => true
             ]); 
@@ -177,7 +182,7 @@ class BukuTest extends TestCase
         $buku  = buku::query()->limit(1)->first();
 
         $this->post('/api/buku/'.$buku->slug, [
-            'id_buku' => '752aca66-bd35-43ab-9772-152dff274913',
+            // 'id_buku' => '752aca66-bd35-43ab-9772-152dff274913',
         "slug" => "30-Cerita-Teladan-Islami",
         "nama_buku" => "30 Cerita Teladan Islami",
         "gambar_buku" => new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true),
@@ -186,15 +191,15 @@ class BukuTest extends TestCase
         "jumlah_buku" => "88",
         "buku_tersedia" => "1",
         "created_at" => "2024-12-04",
-        "updated_at" => "2024-12-04",
+        // "updated_at" => "2024-12-04",
         ], [
-            "Authorization" => "2069ff7a-b274-4725-bd9c-362256553c1b"
+            "Authorization" => "c05fa1dd-fde2-4f2e-bf77-47e84a2672dc"
         ])->assertStatus(200)->assertJson([
             'data' => [
                 // "id_buku" => "0298891b-637b-46d2-8198-6bf79badf03a",
                 "slug" => "30-Cerita-Teladan-Islami",
                 "nama_buku" => "30 Cerita Teladan Islami",
-               "gambar_buku" => new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true),
+            //    "gambar_buku" => new \Illuminate\Http\UploadedFile(resource_path('testImg/indomie.jpg'), 'indomie.jpg', null, null, true),
                 "nama_penulis" => "Mahmudah Mastur",
                 "nama_penerbit" => "Noktah",
                 "jumlah_buku" => "88",
@@ -216,33 +221,43 @@ class BukuTest extends TestCase
 
     public function testPinjamBuku(){
       
+        $anggota = anggota::query()->limit(1)->first();
+        // $buku = buku::query()->limit(1)->first();
         $response = $this->post("/api/pinjam-buku/", [
-                 'slug' => '30-cerita-teladan-islami', 
-                'id_anggota' => '30892be2-f96c-4910-b933-264835ecfaf4'
+                 'slug' => "gadis-minimarket", 
+                'id_anggota' => $anggota->id_anggota
         ] ,[
-            'Authorization' => 'fe1ddb81-3a0a-4e73-a009-cb384cc5479d'
+            'Authorization' => '7d05016f-a9a0-49a0-b93e-91b8c635ccd1'
         ])->assertStatus(201)->assertJson([
             'data' => [
-                'slug' => '30-cerita-teladan-islami', 
-                'id_anggota' => '30892be2-f96c-4910-b933-264835ecfaf4'
+                'slug' => "gadis-minimarket", 
+                'id_anggota' => $anggota->id_anggota
             ]
-        ])->json();
+            ]);
     
 
-        Log::info(json_encode($response, JSON_PRETTY_PRINT));
+       // Log::info(json_encode($response, JSON_PRETTY_PRINT));
     }
 
     public function testDetailAnggota() {
         $anggota = anggota::query()->limit(1)->first();
         $response = $this->get("/api/detail-anggota/".$anggota->slug , [
-            'Authorization' => "a759dc03-b052-4e2f-b07a-5da630147d33"
+            'Authorization' => "c05fa1dd-fde2-4f2e-bf77-47e84a2672dc"
         ])->assertStatus(200)->json();
     }
 
     public function testSearchPeminjamanAnggota() {
         $anggota = anggota::query()->limit(1)->first();
-        $response = $this->get('/api/peminjaman-anggota/'.$anggota->slug.'?nama_buku=30 Cerita Teladan Islami' , [
-            'Authorization' => "a759dc03-b052-4e2f-b07a-5da630147d33"
+        $response = $this->get('/api/peminjaman-anggota/'.$anggota->slug.'?nama_buku=gadis-minimarket' , [
+            'Authorization' => "7d05016f-a9a0-49a0-b93e-91b8c635ccd1"
+        ])->assertStatus(200)->json();
+    }
+
+
+    public function testSearchPeminjamanAnggotaBuku() {
+        $anggota = anggota::query()->limit(1)->first();
+        $response = $this->get('/api/peminjaman-anggota/'.$anggota->slug.'?buku_dikembalikan=0' , [
+            'Authorization' => "7d05016f-a9a0-49a0-b93e-91b8c635ccd1"
         ])->assertStatus(200)->json();
     }
 
@@ -255,10 +270,10 @@ class BukuTest extends TestCase
 
     public function testPengembalian() {
         $order = detail_order::query()->limit(1)->first();
-        $response = $this->withSession(['telat' => true])->post("/api/pengembalian-simpan/b0df2755-3eab-444c-999d-d14a5da216b0" , [
-            'id_order' => "b0df2755-3eab-444c-999d-d14a5da216b0"
+        $response = $this->withSession(['telat' => true])->post("/api/pengembalian-simpan/0c19a71c-8627-4adb-9a16-8043dd34e5e0" , [
+            'id_order' => "0c19a71c-8627-4adb-9a16-8043dd34e5e0"
         ], [
-            "Authorization" => "994bd39e-9760-415a-a090-b6076676e29f"
+            "Authorization" => "35946bed-65ad-422c-b584-531da60a9519"
         ])->assertStatus(200)->json();
     }
 

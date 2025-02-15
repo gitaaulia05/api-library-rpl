@@ -33,10 +33,10 @@ class BukuCreateRequest extends FormRequest
             'nama_penulis' => ['required' , 'max:100'],
             'nama_penerbit' => ['required' , 'max:100'],
             'jumlah_buku' => ['required' , 'numeric'],
-            'buku_tersedia' => ['required' , 'max:100'],
-            'tahun_terbit' => ['required' , 'max:100'],
+            'buku_tersedia' => ['required' , 'max:100' , 'numeric'],
+            'tahun_terbit' => ['required' , 'numeric','min:1900', 'max:'.(date('Y')) ],
             'created_at' => ['required' ],
-        'updated_at' => ['required'  ],
+      
         ];
     }
 

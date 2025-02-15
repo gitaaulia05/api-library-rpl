@@ -30,4 +30,6 @@ class order extends Model
         return $this->BelongsTo(anggota::class , 'id_anggota' , 'id_anggota');
     }
 
+    
+
 }

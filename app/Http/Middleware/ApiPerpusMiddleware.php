@@ -18,7 +18,7 @@ class ApiPerpusMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-
+        app()->setLocale('id');
         $token = $request->header('Authorization');
     
         \Log::info('Token diterima di backend:', ['token' => $token]);
