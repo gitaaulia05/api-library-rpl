@@ -20,12 +20,11 @@ class ApiPerpusMiddleware
     {
         app()->setLocale('id');
         $token = $request->header('Authorization');
-    
-        \Log::info('Token diterima di backend:', ['token' => $token]);
+
+        // \Log::info('Token diterima di backend:', ['token' => $token]);
 
         if ($token && str_starts_with($token, 'Bearer ')) {
             $token = substr($token, 7); // Ambil token tanpa "Bearer "
-           
         }
 
 

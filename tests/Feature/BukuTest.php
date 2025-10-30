@@ -2,15 +2,16 @@
 
 namespace Tests\Feature;
 
+use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\buku;
 use App\Models\order;
-use App\Models\detail_order;
 use App\Models\anggota;
 
 
 use App\Models\Petugas;
 use Illuminate\Support\Str;
+use App\Models\detail_order;
 use Illuminate\Http\UploadedFile;
 use Database\Seeders\PetugasSeeder;
 use Illuminate\Support\Facades\Log;
@@ -151,10 +152,13 @@ class BukuTest extends TestCase
         // self::assertEquals(1, count($response['data']));
     }
 
-    public function testSearchAnggota(){
+public function testSearchAnggota(){
         $response = $this->get('/api/anggota?nama=becky' , [
-            'Authorization' => '7d05016f-a9a0-49a0-b93e-91b8c635ccd1'
-        ])->assertStatus(200)->json();
+            'Authorization' => 'b5e03c75-f03c-469d-bd5f-4a401204d910',
+            'If-None-Match' => '1739884493',
+        ]);
+        $response->assertStatus(200);
+        // ->assertStatus(200)->json();
     }
 
     public function testBukuHabis(){

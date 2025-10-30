@@ -44,6 +44,7 @@ class BukuPerpustakaan extends Controller
         $data['id_buku'] = (String) Str::uuid();
 
         $data['slug'] = SlugService::createSlug(Buku::class , 'slug' , $data['nama_buku']);
+        
         $qr = QrCode::format('png')->generate('pinjam-buku/'.$data['slug']);
         $qrName = $data['slug'].'.png';
         $qrPath = 'barcode/' . $qrName;

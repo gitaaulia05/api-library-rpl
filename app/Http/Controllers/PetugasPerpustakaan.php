@@ -32,7 +32,6 @@ class PetugasPerpustakaan extends Controller
 
         $petugas->token = Str::uuid()->toString();
 
-        \Log::info('Masuk kesini lagi' );
         $petugas->save();
     
         return new PetugasResource($petugas);

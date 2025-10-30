@@ -23,7 +23,6 @@ use App\Http\Requests\DetailOrderUpdateRequest;
 class AnggotaPerpustakaan extends Controller
 {
     public function tambah_anggota(AnggotaCreateRequest $request) : JsonResponse{
-     
         $data = $request->validated();
         $data['id_anggota'] = (String) Str::uuid();
 
@@ -38,7 +37,15 @@ class AnggotaPerpustakaan extends Controller
 
         }
 
-        public function search_anggota(Request $request) : AnggotaCollection {
+        public function search_anggota(Request $request) :  AnggotaCollection  {
+            // $lastUpdated = anggota::max('updated_at');
+
+            // $eTag = $lastUpdated ? strtotime($lastUpdated) : time();
+
+            // if($request->header('If-None-Match') == $eTag) {
+            //     return response()->json([] , 304)->header('ETag' , $eTag);
+            // }
+           
             $pageBuku = $request->input('page' , 1);
             $size = $request->input('size' ,15);
 
@@ -50,9 +57,15 @@ class AnggotaPerpustakaan extends Controller
                 }
             });
 
-            $anggotas = $anggota->paginate(perPage : $size , page : $pageBuku);
-            return new AnggotaCollection($anggotas);
+        
 
+            $anggotas = $anggota->paginate(perPage : $size , page : $pageBuku);
+
+            // return (new AnggotaCollection($anggotas))->additional([
+            //     'headers' => ['ETag' => $eTag]
+            // ]);
+
+            return new AnggotaCollection($anggotas);
         }
 
         public function detail_anggota($slugAnggota) : AnggotaResource {
@@ -120,8 +133,14 @@ class AnggotaPerpustakaan extends Controller
                 $detailOrder->buku_dikembalikan += 1;
                 $detailOrder->save();
 
-                if($detailOrder->buku){
-                    $detailOrder->buku->buku_tersedia += 1;
+                $detailOrder->buku->jumlah_buku +=1;
+                $detailOrder->buku->save();
+                
+                if($detailOrder->buku->jumlah_buku  >= 1){
+                    $detailOrder->buku->buku_tersedia = 1;
+                    $detailOrder->buku->save();
+                } else {
+                    $detailOrder->buku->buku_tersedia = 0;
                     $detailOrder->buku->save();
                 }
 
